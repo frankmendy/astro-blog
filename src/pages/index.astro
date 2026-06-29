@@ -1,8 +1,14 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
 
 <!doctype html>
@@ -10,61 +16,77 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
-	<body>
+	<body class="bg-gray-50 text-gray-900 m-0 p-0 font-sans">
 		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none p-0 m-0">
- 			 {
-			    posts.map((post) => (
-			      <li class="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-			        <a href={`/blog/${post.id}/`} class="block no-underline text-inherit">
-			          <div class="relative overflow-hidden aspect-[16/10]">
-			            <img 
-			              src={post.data.heroImage} 
-			              alt="" 
-			              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-			            />
-			          </div>
-			          <div class="p-6">
-			            <h4 class="m-0 text-xl font-bold text-gray-900 group-hover:text-amber-600 transition-colors line-clamp-2">
-			              {post.data.title}
-			            </h4>
-			            <p class="mt-2 text-sm text-gray-500 m-0">
-			              <FormattedDate date={post.data.pubDate} />
-			            </p>
-			            <p class="mt-3 text-base text-gray-600 m-0 line-clamp-2">
-			              {post.data.description}
-			            </p>
-			          </div>
-			        </a>
-			      </li>
-			    ))
-			  }
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+		
+		<main class="w-full max-w-7xl mx-auto px-4 md:px-8 py-12">
+			<!-- 🌟 第一部分：超大视觉海报区 (Hero Section) -->
+			<section class="relative rounded-2xl overflow-hidden mb-16 shadow-lg bg-gray-900 text-white min-h-[450px] flex items-center">
+				<!-- 背景大图：你可以换成你自己的甘肃高清图 -->
+				<div class="absolute inset-0 z-0">
+					<img 
+						src="https://images.unsplash.com/photo-1542640244-7e672d6cef21?auto=format&fit=crop&w=1600&q=80" 
+						alt="Gansu Landscape" 
+						class="w-full h-full object-cover opacity-60"
+					/>
+				</div>
+				<!-- 海报文字 -->
+				<div class="relative z-10 max-w-2xl pl-8 md:pl-16 pr-8 py-12">
+					<span class="text-amber-400 font-bold tracking-widest text-sm uppercase">The Ultimate Silk Road Adventure</span>
+					<h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mt-2 mb-4 drop-shadow-md">
+						Discover Gansu Odyssey
+					</h1>
+					<p class="text-lg md:text-xl text-gray-200 mb-8 drop-shadow">
+						Explore majestic sand dunes, rainbow mountains, and ancient Buddhist art through stunning visual stories.
+					</p>
+					<a href="#guide-posts" class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8 py-3 rounded-full transition-colors no-underline inline-block shadow-md">
+						Start Exploring
+					</a>
+				</div>
+			</section>
+
+			<!-- 🌟 第二部分：大图瀑布流/卡片区 (Photo Gallery Grid) -->
+			<section id="guide-posts">
+				<div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+					<div>
+						<h2 class="text-3xl font-extrabold tracking-tight m-0 text-gray-900">Latest Photo Guides</h2>
+						<p class="text-gray-500 mt-2 m-0 text-base">Visual travel insights from Lanzhou to Dunhuang.</p>
+					</div>
+				</div>
+
+				<ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none p-0 m-0">
+					{
+						posts.map((post) => (
+							<li class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
+								<a href={`/blog/${post.id}/`} class="block no-underline text-inherit">
+									<!-- 核心：大图展示区域，保持 16:10 黄金比例 -->
+									<div class="relative overflow-hidden aspect-[16/10] bg-gray-100">
+										<img 
+											src={post.data.heroImage} 
+											alt="" 
+											class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+										/>
+									</div>
+									<!-- 卡片文字区 -->
+									<div class="p-6 md:p-8">
+										<span class="text-xs font-semibold tracking-wider text-amber-600 uppercase">
+											<FormattedDate date={post.data.pubDate} />
+										</span>
+										<h3 class="m-0 text-2xl font-bold text-gray-950 group-hover:text-amber-600 transition-colors line-clamp-2 mt-2 leading-tight">
+											{post.data.title}
+										</h3>
+										<p class="mt-3 text-base text-gray-600 m-0 line-clamp-2 leading-relaxed">
+											{post.data.description}
+										</p>
+									</div>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
 		</main>
+
 		<Footer />
 	</body>
 </html>
