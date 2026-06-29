@@ -1,11 +1,13 @@
 ---
-import '../styles/global.css';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+
+// 引入全局样式以防裸奔
+import '../styles/global.css';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -16,71 +18,66 @@ const posts = (await getCollection('blog')).sort(
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			/* 强制保底样式：哪怕全局样式崩了，这里的局部样式也绝对生效 */
+			.travel-hero {
+				background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542640244-7e672d6cef21?auto=format&fit=crop&w=1200&q=80');
+				background-size: cover;
+				background-position: center;
+				color: white;
+				padding: 80px 40px;
+				border-radius: 16px;
+				margin-bottom: 40px;
+				font-family: sans-serif;
+			}
+			.travel-hero h1 { font-size: 3rem; margin: 10px 0; font-weight: 800; }
+			.travel-hero p { font-size: 1.2rem; color: #e2e8f0; max-width: 600px; }
+			.btn-explore {
+				background-color: #f59e0b; color: #1e293b; padding: 12px 30px;
+				border-radius: 9999px; text-decoration: none; font-weight: bold;
+				display: inline-block; margin-top: 20px;
+			}
+			.photo-grid {
+				display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+				gap: 30px; list-style: none; padding: 0;
+			}
+			.photo-card {
+				background: white; border-radius: 12px; overflow: hidden;
+				box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #f1f5f9;
+			}
+			.card-img-box { width: 100%; aspect-ratio: 16/10; overflow: hidden; background: #e2e8f0; }
+			.card-img-box img { width: 100%; hieght: 100%; object-fit: cover; }
+			.card-content { padding: 24px; font-family: sans-serif; }
+			.card-content h3 { margin: 8px 0; font-size: 1.5rem; color: #0f172a; }
+			.card-content h3 a { text-decoration: none; color: inherit; }
+			.card-content h3 a:hover { color: #d97706; }
+		</style>
 	</head>
-	<body class="bg-gray-50 text-gray-900 m-0 p-0 font-sans">
+	<body style="background-color: #f8fafc; margin: 0; padding: 0;">
 		<Header />
 		
-		<main class="w-full max-w-7xl mx-auto px-4 md:px-8 py-12">
-			<!-- 🌟 第一部分：超大视觉海报区 (Hero Section) -->
-			<section class="relative rounded-2xl overflow-hidden mb-16 shadow-lg bg-gray-900 text-white min-h-[450px] flex items-center">
-				<!-- 背景大图：你可以换成你自己的甘肃高清图 -->
-				<div class="absolute inset-0 z-0">
-					<img 
-						src="https://images.unsplash.com/photo-1542640244-7e672d6cef21?auto=format&fit=crop&w=1600&q=80" 
-						alt="Gansu Landscape" 
-						class="w-full h-full object-cover opacity-60"
-					/>
-				</div>
-				<!-- 海报文字 -->
-				<div class="relative z-10 max-w-2xl pl-8 md:pl-16 pr-8 py-12">
-					<span class="text-amber-400 font-bold tracking-widest text-sm uppercase">The Ultimate Silk Road Adventure</span>
-					<h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mt-2 mb-4 drop-shadow-md">
-						Discover Gansu Odyssey
-					</h1>
-					<p class="text-lg md:text-xl text-gray-200 mb-8 drop-shadow">
-						Explore majestic sand dunes, rainbow mountains, and ancient Buddhist art through stunning visual stories.
-					</p>
-					<a href="#guide-posts" class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8 py-3 rounded-full transition-colors no-underline inline-block shadow-md">
-						Start Exploring
-					</a>
-				</div>
+		<main style="max-w: 1200px; margin: 0 auto; padding: 40px 20px;">
+			<section class="travel-hero">
+				<span style="color: #fbbf24; font-weight: bold; tracking-wider; text-transform: uppercase; font-size: 0.85rem;">The Ultimate Silk Road Adventure</span>
+				<h1>Discover Gansu Odyssey</h1>
+				<p>Explore majestic sand dunes, rainbow mountains, and ancient Buddhist art through stunning visual stories.</p>
+				<a href="#posts" class="btn-explore">Start Exploring</a>
 			</section>
 
-			<!-- 🌟 第二部分：大图瀑布流/卡片区 (Photo Gallery Grid) -->
-			<section id="guide-posts">
-				<div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
-					<div>
-						<h2 class="text-3xl font-extrabold tracking-tight m-0 text-gray-900">Latest Photo Guides</h2>
-						<p class="text-gray-500 mt-2 m-0 text-base">Visual travel insights from Lanzhou to Dunhuang.</p>
-					</div>
-				</div>
-
-				<ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none p-0 m-0">
+			<section id="posts">
+				<h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 24px; font-family: sans-serif;">Latest Photo Guides</h2>
+				<ul class="photo-grid">
 					{
 						posts.map((post) => (
-							<li class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
-								<a href={`/blog/${post.id}/`} class="block no-underline text-inherit">
-									<!-- 核心：大图展示区域，保持 16:10 黄金比例 -->
-									<div class="relative overflow-hidden aspect-[16/10] bg-gray-100">
-										<img 
-											src={post.data.heroImage} 
-											alt="" 
-											class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-										/>
-									</div>
-									<!-- 卡片文字区 -->
-									<div class="p-6 md:p-8">
-										<span class="text-xs font-semibold tracking-wider text-amber-600 uppercase">
-											<FormattedDate date={post.data.pubDate} />
-										</span>
-										<h3 class="m-0 text-2xl font-bold text-gray-950 group-hover:text-amber-600 transition-colors line-clamp-2 mt-2 leading-tight">
-											{post.data.title}
-										</h3>
-										<p class="mt-3 text-base text-gray-600 m-0 line-clamp-2 leading-relaxed">
-											{post.data.description}
-										</p>
-									</div>
-								</a>
+							<li class="photo-card">
+								<div class="card-img-box">
+									<img src={post.data.heroImage} alt="" />
+								</div>
+								<div class="card-content">
+									<span style="font-size: 0.75rem; color: #b45309; font-weight: 600;"><FormattedDate date={post.data.pubDate} /></span>
+									<h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+									<p style="color: #475569; font-size: 0.95rem; line-height: 1.5; margin: 0;">{post.data.description}</p>
+								</div>
 							</li>
 						))
 					}
