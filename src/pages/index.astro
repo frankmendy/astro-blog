@@ -8,6 +8,8 @@ import FormattedDate from '../components/FormattedDate.astro';
 // 导入 Astro 官方的核心图像优化组件（用来彻底消灭灰色方块）
 import { Image } from 'astro:assets';
 
+import heroBg from '../assets/home-hero-bg.jpg';
+
 // 引入全局样式以防裸奔
 import '../styles/global.css';
 
@@ -23,7 +25,7 @@ const posts = (await getCollection('blog')).sort(
 		<style>
 			/* 强制保底样式：哪怕全局样式崩了，这里的局部样式也绝对生效 */
 			.travel-hero {
-				background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542640244-7e672d6cef21?auto=format&fit=crop&w=1200&q=80');
+				
 				background-size: cover;
 				background-position: center;
 				color: white;
@@ -61,7 +63,7 @@ const posts = (await getCollection('blog')).sort(
 		<Header />
 		
 		<main style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
-			<section class="travel-hero">
+			<section class="travel-hero" style={`background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url(${heroBg.src});`}>
 				<span style="color: #fbbf24; font-weight: bold; tracking-wider; text-transform: uppercase; font-size: 0.85rem;">The Ultimate Silk Road Adventure</span>
 				<h1>Discover Gansu Odyssey</h1>
 				<p>Explore majestic sand dunes, rainbow mountains, and ancient Buddhist art through stunning visual stories.</p>
