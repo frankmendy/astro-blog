@@ -2,7 +2,7 @@
 title: "How to Use Alipay and WeChat Pay in Gansu: A 2026 Guide for Foreigners"
 description: "Mastering mobile payments in Northwest China. Learn how to bind your Visa or Mastercard easily and travel the Silk Road cashless and hassle-free."
 pubDate: "2026-06-30"
-heroImage: "/alipay-wechat-guide-cover.jpg"
+heroImage: "alipay-wechat-guide-cover.jpg"
 tags: ["Essential Guide"]
 ---
 
@@ -34,7 +34,7 @@ Alipay is the friendliest app for international travelers and seamlessly integra
 4. **Add Your Card:** Go to **Account** -> **Bank Cards** -> **Add Card**.
 5. **Enter Details:** Input your Visa, Mastercard, or Diners Club info. You will need to complete a standard 3D Secure verification from your home bank.
 
-![Alipay International Setup Tutorial](/alipay-setup-step.jpg)
+![Alipay International Setup Tutorial](alipay-setup-step.jpg)
 *Figure 1: Follow the clean English layout to bind your passport and international card.*
 
 ---
