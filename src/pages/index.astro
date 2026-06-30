@@ -5,6 +5,8 @@ import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+// 导入 Astro 官方的核心图像优化组件（用来彻底消灭灰色方块）
+import { Image } from 'astro:assets';
 
 // 引入全局样式以防裸奔
 import '../styles/global.css';
@@ -44,10 +46,12 @@ const posts = (await getCollection('blog')).sort(
 			.photo-card {
 				background: white; border-radius: 12px; overflow: hidden;
 				box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #f1f5f9;
+				display: flex; flex-direction: column;
 			}
 			.card-img-box { width: 100%; aspect-ratio: 16/10; overflow: hidden; background: #e2e8f0; }
-			.card-img-box img { width: 100%; hieght: 100%; object-fit: cover; }
-			.card-content { padding: 24px; font-family: sans-serif; }
+			/* 修正了之前的 hieght 拼写错误，强制让组件图片自适应完美裁剪 */
+			.card-img-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+			.card-content { padding: 24px; font-family: sans-serif; flex-grow: 1; }
 			.card-content h3 { margin: 8px 0; font-size: 1.5rem; color: #0f172a; }
 			.card-content h3 a { text-decoration: none; color: inherit; }
 			.card-content h3 a:hover { color: #d97706; }
@@ -56,7 +60,7 @@ const posts = (await getCollection('blog')).sort(
 	<body style="background-color: #f8fafc; margin: 0; padding: 0;">
 		<Header />
 		
-		<main style="max-w: 1200px; margin: 0 auto; padding: 40px 20px;">
+		<main style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
 			<section class="travel-hero">
 				<span style="color: #fbbf24; font-weight: bold; tracking-wider; text-transform: uppercase; font-size: 0.85rem;">The Ultimate Silk Road Adventure</span>
 				<h1>Discover Gansu Odyssey</h1>
@@ -71,16 +75,20 @@ const posts = (await getCollection('blog')).sort(
 						posts.map((post) => (
 							<li class="photo-card">
 								<div class="card-img-box">
-									<img src={post.data.heroImage} alt="" />
+									{/* 
+									  核心改动：使用官方核心 Image 组件替代普通 img 标签。
+									  它会吃下 post.data.heroImage 对象，并在打包时全自动生成带有 WebP 压缩的高清大图网址。
+									*/}
+									<Image src={post.data.heroImage} width={720} height={450} alt={post.data.title} />
 								</div>
 								<div class="card-content">
-									<span style="font-size: 0.75rem; color: #b45309; font-weight: 600;"><FormattedDate date={post.data.pubDate} /></span>
 									{post.data.tags && (
-    									<span style="color: #eab308; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.25rem;">
-       										 {post.data.tags[0]}
-   										 </span>
+										<span style="color: #eab308; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.25rem;">
+											{post.data.tags[0]}
+										</span>
 									)}
 									<h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+									<span style="font-size: 0.75rem; color: #64748b; font-weight: 500; display: block; margin-bottom: 8px;"><FormattedDate date={post.data.pubDate} /></span>
 									<p style="color: #475569; font-size: 0.95rem; line-height: 1.5; margin: 0;">{post.data.description}</p>
 								</div>
 							</li>
