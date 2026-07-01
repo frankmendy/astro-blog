@@ -2,7 +2,7 @@
 title: "How to Book Mogao Caves Tickets: A 2026 Survival Guide for Foreigners"
 description: "Don't get locked out of Dunhuang! Master the complicated booking system, understand A-Tickets vs. B-Tickets, and learn how foreigners can secure spots in 2026."
 pubDate: "2026-07-06"
-heroImage: "../../assets/mogao-caves-cover.jpg"
+heroImage: "../../assets/mogao-cover.jpg"
 tags: ["Essential Guide"]
 ---
 
