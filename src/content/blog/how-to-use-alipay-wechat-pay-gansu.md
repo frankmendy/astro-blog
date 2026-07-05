@@ -73,4 +73,4 @@ Because mobile transactions in China look like "online internet purchases" to yo
 
 1. Get your phone ready and bind your card using our guide above.
 2. Ensure your phone has a stable data roaming plan or buy an eSIM before landing.
-3. [Check out our guide on Train vs Flight in Gansu](/blog/getting-around-gansu) to plan your transit!
+3. [Check out our guide on Train vs Flight in Gansu](/blog/getting-around-gansu-train-flight-charter) to plan your transit!
