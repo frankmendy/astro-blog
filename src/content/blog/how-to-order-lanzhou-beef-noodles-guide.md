@@ -1,7 +1,7 @@
 ---
 title: "The Ultimate Lanzhou Beef Noodles Guide: How to Order Like a Local in 2026"
 description: "Master the secret language of China's iconic hand-pulled noodles. Learn how to choose noodle thickness, add 'black huanier' custom pairings, and order in Lanzhou."
-pubDate: "2026-07-17"
+pubDate: "2026-07-05"
 heroImage: "../../assets/lanzhou-noodles-cover.jpg"
 tags: ["Food Guide"]
 ---
