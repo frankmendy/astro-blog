@@ -1,112 +1,187 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
 
+// 1. 获取所有博客文章并按时间降序排列
 const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// 2. 核心数据分流引擎（利用标签和文件名，全自动把文章分类到5个抽屉里）
+
+// 栏目一：生存助手类（支付宝、交通对比等）
+const assistancePosts = posts.filter(post => 
+	post.data.tags?.some(tag => ['Survival Guide', 'Transport'].includes(tag)) || 
+	post.id.includes('alipay') || post.id.includes('getting-around')
+);
+
+// 栏目二：经典风光摄影类（张掖丹霞、鸣沙山、莫高窟抢票等，排除甘南和美食酒店）
+const photoPosts = posts.filter(post => 
+	post.data.tags?.includes('Photo Guide') && 
+	!post.id.includes('labrang') && !post.id.includes('zagana') && !post.id.includes('langmusi') &&
+	!post.id.includes('noodles') && !post.id.includes('food') && !post.id.includes('hotel')
+);
+
+// 栏目三：藏地小众秘境类（甘南三部曲专用）
+const hiddenPosts = posts.filter(post => 
+	post.id.includes('labrang') || post.id.includes('zagana') || post.id.includes('langmusi')
+);
+
+// 栏目四：舌尖美食类（兰州牛肉面及未来的美食探店）
+const foodPosts = posts.filter(post => 
+	post.data.tags?.includes('Food Guide') || post.id.includes('noodles') || post.id.includes('food')
+);
+
+// 栏目五：严选酒店住宿类（外宾友好、避坑推荐等）
+const hotelPosts = posts.filter(post => 
+	post.data.tags?.includes('Hotel Guide') || post.id.includes('hotel') || post.id.includes('stay') || post.id.includes('accommodation')
 );
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={`Gansu Travel Insider & Library - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
-			main {
-				width: 960px;
+			main { width: 960px; max-width: calc(100% - 2rem); margin: 0 auto; padding: 3em 1rem; font-family: sans-serif; }
+			.page-title { font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; text-align: center; }
+			.page-subtitle { font-size: 1.1rem; color: #64748b; text-align: center; margin-bottom: 3rem; }
+			
+			/* 杂志级栏目标题样式 */
+			.category-section { margin-bottom: 4rem; }
+			.category-title { 
+				font-size: 1.6rem; font-weight: 800; color: #0f172a; 
+				padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; margin-bottom: 1.5rem;
+				display: flex; align-items: center; gap: 10px;
 			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
+			
+			/* 现代多列响应式卡片网格 */
+			.blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; list-style: none; padding: 0; margin: 0; }
+			.blog-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
+			.blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -3px rgba(0,0,0,0.06); }
+			.blog-img { width: 100%; aspect-ratio: 16/10; object-fit: cover; background: #e2e8f0; }
+			.blog-content { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; }
+			.blog-date { font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-weight: 500; }
+			.blog-card-title { font-size: 1.2rem; font-weight: 700; margin: 0 0 8px 0; line-height: 1.4; }
+			.blog-card-title a { text-decoration: none; color: #0f172a; }
+			.blog-card-title a:hover { color: #d97706; }
+			.blog-desc { font-size: 0.875rem; color: #475569; line-height: 1.5; margin: 0; }
+			.no-posts { color: #94a3b8; font-style: italic; font-size: 0.95rem; margin-left: 4px; }
 		</style>
 	</head>
-	<body>
+	<body style="background-color: #f8fafc; margin: 0;">
 		<Header />
 		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
+			<h1 class="page-title">Gansu Travel Insider Library</h1>
+			<p class="page-subtitle">Expert logistics, photography blueprints, and accommodation secrets curated for global adventurers.</p>
+
+			<!-- 栏目一：生存助手 -->
+			<section class="category-section">
+				<h2 class="category-title">🛠️ Travel Assistance & Essentials</h2>
+				{assistancePosts.length > 0 ? (
+					<ul class="blog-grid">
+						{assistancePosts.map((post) => (
+							<li class="blog-card">
+								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<div class="blog-content">
+									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
+									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+									<p class="blog-desc">{post.data.description}</p>
+								</div>
 							</li>
-						))
-					}
-				</ul>
+						))}
+					</ul>
+				) : (
+					<p class="no-posts">Logistics guides coming soon...</p>
+				)}
+			</section>
+
+			<!-- 栏目二：经典风光摄影 -->
+			<section class="category-section">
+				<h2 class="category-title">📸 Classic Visual Blueprints</h2>
+				{photoPosts.length > 0 ? (
+					<ul class="blog-grid">
+						{photoPosts.map((post) => (
+							<li class="blog-card">
+								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<div class="blog-content">
+									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
+									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+									<p class="blog-desc">{post.data.description}</p>
+								</div>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p class="no-posts">Visual guides coming soon...</p>
+				)}
+			</section>
+
+			<!-- 栏目三：小众秘境 -->
+			<section class="category-section">
+				<h2 class="category-title">🏔️ Off-the-Beaten-Path & Tibetan Culture</h2>
+				{hiddenPosts.length > 0 ? (
+					<ul class="blog-grid">
+						{hiddenPosts.map((post) => (
+							<li class="blog-card">
+								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<div class="blog-content">
+									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
+									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+									<p class="blog-desc">{post.data.description}</p>
+								</div>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p class="no-posts">Hidden track guides coming soon...</p>
+				)}
+			</section>
+
+			<!-- 栏目四：舌尖美食 -->
+			<section class="category-section">
+				<h2 class="category-title">🍜 Silk Road Culinary & Food Culture</h2>
+				{foodPosts.length > 0 ? (
+					<ul class="blog-grid">
+						{foodPosts.map((post) => (
+							<li class="blog-card">
+								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<div class="blog-content">
+									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
+									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+									<p class="blog-desc">{post.data.description}</p>
+								</div>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p class="no-posts">Culinary guides coming soon...</p>
+				)}
+			</section>
+
+			<!-- 栏目五：酒店推荐 -->
+			<section class="category-section">
+				<h2 class="category-title">🏨 Handpicked Stays & Retreats</h2>
+				{hotelPosts.length > 0 ? (
+					<ul class="blog-grid">
+						{hotelPosts.map((post) => (
+							<li class="blog-card">
+								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<div class="blog-content">
+									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
+									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+									<p class="blog-desc">{post.data.description}</p>
+								</div>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p class="no-posts">Expat-friendly accommodation guides coming soon...</p>
+				)}
 			</section>
 		</main>
 		<Footer />
