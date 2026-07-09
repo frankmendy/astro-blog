@@ -11,32 +11,37 @@ const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-// 2. 核心数据分流引擎（利用标签和文件名，全自动把文章分类到5个抽屉里）
+// 辅助函数：把文章里的 "../../assets/xxx.jpg" 转换成线上能跑的 "/src/assets/xxx.jpg" 或者干净的相对路径
+const resolveImageUrl = (imgUrl: any) => {
+	if (typeof imgUrl === 'string') {
+		return imgUrl;
+	}
+	if (imgUrl && typeof imgUrl === 'object' && imgUrl.src) {
+		return imgUrl.src;
+	}
+	return '';
+};
 
-// 栏目一：生存助手类（支付宝、交通对比等）
+// 2. 核心数据分流引擎
 const assistancePosts = posts.filter(post => 
 	post.data.tags?.some(tag => ['Survival Guide', 'Transport'].includes(tag)) || 
 	post.id.includes('alipay') || post.id.includes('getting-around')
 );
 
-// 栏目二：经典风光摄影类（张掖丹霞、鸣沙山、莫高窟抢票等，排除甘南和美食酒店）
 const photoPosts = posts.filter(post => 
 	post.data.tags?.includes('Photo Guide') && 
 	!post.id.includes('labrang') && !post.id.includes('zagana') && !post.id.includes('langmusi') &&
 	!post.id.includes('noodles') && !post.id.includes('food') && !post.id.includes('hotel')
 );
 
-// 栏目三：藏地小众秘境类（甘南三部曲专用）
 const hiddenPosts = posts.filter(post => 
 	post.id.includes('labrang') || post.id.includes('zagana') || post.id.includes('langmusi')
 );
 
-// 栏目四：舌尖美食类（兰州牛肉面及未来的美食探店）
 const foodPosts = posts.filter(post => 
 	post.data.tags?.includes('Food Guide') || post.id.includes('noodles') || post.id.includes('food')
 );
 
-// 栏目五：严选酒店住宿类（外宾友好、避坑推荐等）
 const hotelPosts = posts.filter(post => 
 	post.data.tags?.includes('Hotel Guide') || post.id.includes('hotel') || post.id.includes('stay') || post.id.includes('accommodation')
 );
@@ -51,7 +56,7 @@ const hotelPosts = posts.filter(post =>
 			.page-title { font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; text-align: center; }
 			.page-subtitle { font-size: 1.1rem; color: #64748b; text-align: center; margin-bottom: 3rem; }
 			
-			/* 杂志级栏目标题样式 */
+			/* 栏目标题样式 */
 			.category-section { margin-bottom: 4rem; }
 			.category-title { 
 				font-size: 1.6rem; font-weight: 800; color: #0f172a; 
@@ -59,11 +64,11 @@ const hotelPosts = posts.filter(post =>
 				display: flex; align-items: center; gap: 10px;
 			}
 			
-			/* 现代多列响应式卡片网格 */
+			/* 响应式网格 */
 			.blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; list-style: none; padding: 0; margin: 0; }
 			.blog-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
 			.blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -3px rgba(0,0,0,0.06); }
-			.blog-img { width: 100%; aspect-ratio: 16/10; object-fit: cover; background: #e2e8f0; }
+			.blog-img { width: 100%; height: auto; aspect-ratio: 16/10; object-fit: cover; background: #e2e8f0; display: block; }
 			.blog-content { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; }
 			.blog-date { font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-weight: 500; }
 			.blog-card-title { font-size: 1.2rem; font-weight: 700; margin: 0 0 8px 0; line-height: 1.4; }
@@ -79,14 +84,13 @@ const hotelPosts = posts.filter(post =>
 			<h1 class="page-title">Gansu Travel Insider Library</h1>
 			<p class="page-subtitle">Expert logistics, photography blueprints, and accommodation secrets curated for global adventurers.</p>
 
-			<!-- 栏目一：生存助手 -->
 			<section class="category-section">
 				<h2 class="category-title">🛠️ Travel Assistance & Essentials</h2>
 				{assistancePosts.length > 0 ? (
 					<ul class="blog-grid">
 						{assistancePosts.map((post) => (
 							<li class="blog-card">
-								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<img class="blog-img" src={resolveImageUrl(post.data.heroImage)} alt={post.data.title} loading="lazy" />
 								<div class="blog-content">
 									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
 									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
@@ -100,14 +104,13 @@ const hotelPosts = posts.filter(post =>
 				)}
 			</section>
 
-			<!-- 栏目二：经典风光摄影 -->
 			<section class="category-section">
 				<h2 class="category-title">📸 Classic Visual Blueprints</h2>
 				{photoPosts.length > 0 ? (
 					<ul class="blog-grid">
 						{photoPosts.map((post) => (
 							<li class="blog-card">
-								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<img class="blog-img" src={resolveImageUrl(post.data.heroImage)} alt={post.data.title} loading="lazy" />
 								<div class="blog-content">
 									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
 									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
@@ -121,14 +124,13 @@ const hotelPosts = posts.filter(post =>
 				)}
 			</section>
 
-			<!-- 栏目三：小众秘境 -->
 			<section class="category-section">
 				<h2 class="category-title">🏔️ Off-the-Beaten-Path & Tibetan Culture</h2>
 				{hiddenPosts.length > 0 ? (
 					<ul class="blog-grid">
 						{hiddenPosts.map((post) => (
 							<li class="blog-card">
-								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<img class="blog-img" src={resolveImageUrl(post.data.heroImage)} alt={post.data.title} loading="lazy" />
 								<div class="blog-content">
 									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
 									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
@@ -142,14 +144,13 @@ const hotelPosts = posts.filter(post =>
 				)}
 			</section>
 
-			<!-- 栏目四：舌尖美食 -->
 			<section class="category-section">
 				<h2 class="category-title">🍜 Silk Road Culinary & Food Culture</h2>
 				{foodPosts.length > 0 ? (
 					<ul class="blog-grid">
 						{foodPosts.map((post) => (
 							<li class="blog-card">
-								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<img class="blog-img" src={resolveImageUrl(post.data.heroImage)} alt={post.data.title} loading="lazy" />
 								<div class="blog-content">
 									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
 									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
@@ -163,14 +164,13 @@ const hotelPosts = posts.filter(post =>
 				)}
 			</section>
 
-			<!-- 栏目五：酒店推荐 -->
 			<section class="category-section">
 				<h2 class="category-title">🏨 Handpicked Stays & Retreats</h2>
 				{hotelPosts.length > 0 ? (
 					<ul class="blog-grid">
 						{hotelPosts.map((post) => (
 							<li class="blog-card">
-								<img class="blog-img" src={post.data.heroImage} alt="" />
+								<img class="blog-img" src={resolveImageUrl(post.data.heroImage)} alt={post.data.title} loading="lazy" />
 								<div class="blog-content">
 									<span class="blog-date"><FormattedDate date={post.data.pubDate} /></span>
 									<h3 class="blog-card-title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
