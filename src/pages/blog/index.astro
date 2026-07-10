@@ -25,7 +25,8 @@ const resolveImageUrl = (imgUrl: any) => {
 // 2. 核心数据分流引擎
 const assistancePosts = posts.filter(post => 
 	post.data.tags?.some(tag => ['Survival Guide', 'Transport'].includes(tag)) || 
-	post.id.includes('alipay') || post.id.includes('getting-around')
+	post.id.includes('alipay') || post.id.includes('getting-around') || 
+	post.id.includes('taboo') || post.id.includes('guide')
 );
 
 const photoPosts = posts.filter(post => 
