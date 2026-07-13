@@ -23,27 +23,29 @@ const resolveImageUrl = (imgUrl: any) => {
 };
 
 // 2. 核心数据分流引擎
+// 栏目一：生存助手类
 const assistancePosts = posts.filter(post => 
 	post.data.tags?.some(tag => ['Survival Guide', 'Transport'].includes(tag)) || 
-	post.id.includes('alipay') || 
-	post.id.includes('getting-around') || 
-	post.id.includes('taboo')
+	post.id.includes('alipay') || post.id.includes('getting-around') || post.id.includes('taboo')
 );
 
+// 栏目二：经典风光摄影类（只要是张掖、鸣沙山、莫高窟，或者带有 Photo Guide 标签且非甘南的，统统入选）
 const photoPosts = posts.filter(post => 
-	post.data.tags?.includes('Photo Guide') && 
-	!post.id.includes('labrang') && !post.id.includes('zagana') && !post.id.includes('langmusi') &&
-	!post.id.includes('noodles') && !post.id.includes('food') && !post.id.includes('hotel')
+	post.id.includes('zhangye') || post.id.includes('sand') || post.id.includes('mogao') || post.id.includes('danxia') ||
+	(post.data.tags?.includes('Photo Guide') && !post.id.includes('labrang') && !post.id.includes('zagana') && !post.id.includes('langmusi'))
 );
 
+// 栏目三：藏地小众秘境类（甘南三部曲）
 const hiddenPosts = posts.filter(post => 
 	post.id.includes('labrang') || post.id.includes('zagana') || post.id.includes('langmusi')
 );
 
+// 栏目四：舌尖美食类
 const foodPosts = posts.filter(post => 
 	post.data.tags?.includes('Food Guide') || post.id.includes('noodles') || post.id.includes('food')
 );
 
+// 栏目五：严选酒店住宿类
 const hotelPosts = posts.filter(post => 
 	post.data.tags?.includes('Hotel Guide') || post.id.includes('hotel') || post.id.includes('stay') || post.id.includes('accommodation')
 );
