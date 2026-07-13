@@ -31,8 +31,15 @@ const assistancePosts = posts.filter(post =>
 
 // 栏目二：经典风光摄影类（只要是张掖、鸣沙山、莫高窟，或者带有 Photo Guide 标签且非甘南的，统统入选）
 const photoPosts = posts.filter(post => 
-	post.id.includes('zhangye') || post.id.includes('sand') || post.id.includes('mogao') || post.id.includes('danxia') ||
-	(post.data.tags?.includes('Photo Guide') && !post.id.includes('labrang') && !post.id.includes('zagana') && !post.id.includes('langmusi'))
+	post.id.includes('zhangye') || 
+	post.id.includes('sand') || 
+	post.id.includes('mogao') || 
+	post.id.includes('danxia') || 
+	post.id.includes('yadan') ||
+	(post.data.tags?.some(tag => tag === 'Photo Guide') && 
+	 !post.id.includes('labrang') && 
+	 !post.id.includes('zagana') && 
+	 !post.id.includes('langmusi'))
 );
 
 // 栏目三：藏地小众秘境类（甘南三部曲）
