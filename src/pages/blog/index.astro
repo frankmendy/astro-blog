@@ -44,7 +44,10 @@ const photoPosts = posts.filter(post =>
 
 // 栏目三：藏地小众秘境类（甘南三部曲）
 const hiddenPosts = posts.filter(post => 
-	post.id.includes('labrang') || post.id.includes('zagana') || post.id.includes('langmusi')
+	post.id.includes('labrang') || 
+	post.id.includes('zagana') || 
+	post.id.includes('langmusi') ||
+	post.id.includes('shandan')
 );
 
 // 栏目四：舌尖美食类
