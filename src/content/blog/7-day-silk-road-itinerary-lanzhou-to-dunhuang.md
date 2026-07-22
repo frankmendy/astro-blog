@@ -44,7 +44,7 @@ In this complete 2026 guide, we break down the ultimate day-by-day overland itin
 * **Afternoon:** Check into your Zhangye hotel and head straight to the **Zhangye Danxia National Geological Park (Rainbow Mountains)**. 
 * **Golden Hour Highlight:** Spend 3–4 hours exploring the key viewing platforms. Watch the rolling sandstone hills ignite into brilliant shades of magenta, mustard yellow, and fiery orange as the sun sets over Scenery Field No. 4.
 
-![The surreal rainbow-striped sandstone waves of the Zhangye Danxia landform glowing under the late afternoon sun](../../assets/zhangye-danxia-sunset.jpg)
+![The surreal rainbow-striped sandstone waves of the Zhangye Danxia landform glowing under the late afternoon sun](../../assets/zhangye-sunset-platform4.jpg)
 
 ### Day 3: Mati Temple Caves & Overland Drive to Jiayuguan
 * **Morning:** Visit **Mati Temple (Horse Hoof Temple - 马蹄寺)**, a dramatic Tibetan Buddhist cave complex carved into sheer sandstone cliffs with snow-capped Qilian peaks looming in the background.
