@@ -37,6 +37,7 @@ const photoPosts = posts.filter(post =>
 	post.id.includes('danxia') || 
 	post.id.includes('yadan') ||
     post.id.includes('jiayuguan') || 
+    post.id.includes('maijishan') ||
 	(post.data.tags?.some(tag => tag === 'Photo Guide') && 
 	 !post.id.includes('labrang') && 
 	 !post.id.includes('zagana') && 
