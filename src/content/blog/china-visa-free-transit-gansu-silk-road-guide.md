@@ -4,6 +4,7 @@ description: "Confused about China's 144-hour transit visa vs unilateral visa-fr
 pubDate: "2026-07-23"
 heroImage: "../../assets/china-visa-gansu-cover.jpg"
 tags: ["Survival Guide"]
+---
 
 
 China 144-Hour & Visa-Free Policies: Can You Visit Gansu and the Silk Road?
