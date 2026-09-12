@@ -1,10 +1,13 @@
+---
 title: "China 144-Hour & Visa-Free Policies: Can You Visit Gansu and the Silk Road? (2026 Guide)"
 description: "Confused about China's 144-hour transit visa vs unilateral visa-free rules? Learn whether you can travel to Gansu, Dunhuang, and the Silk Road without a visa."
 pubDate: "2026-07-23"
 heroImage: "../../assets/china-visa-gansu-cover.jpg"
 tags: ["Survival Guide"]
 
+
 China 144-Hour & Visa-Free Policies: Can You Visit Gansu and the Silk Road?
+
 With China significantly expanding its international border access and introducing mutual and unilateral visa-free entry for dozens of European, Oceanian, and Asian nations, traveling to the ancient Middle Kingdom has never been more accessible.
 
 However, a massive wave of confusion surrounds China's 144-Hour Visa-Free Transit scheme versus true bilateral or unilateral visa exemptions.
